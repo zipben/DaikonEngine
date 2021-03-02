@@ -1,0 +1,9 @@
+C:\Users\bdonaldson\source\repos\DaikonEngine\Daikon\bin\Debug\netcoreapp3.1\Daikon.deps.json
+C:\Users\bdonaldson\source\repos\DaikonEngine\Daikon\bin\Debug\netcoreapp3.1\Daikon.dll
+C:\Users\bdonaldson\source\repos\DaikonEngine\Daikon\bin\Debug\netcoreapp3.1\Daikon.pdb
+C:\Users\bdonaldson\source\repos\DaikonEngine\Daikon\obj\Debug\netcoreapp3.1\Daikon.csprojAssemblyReference.cache
+C:\Users\bdonaldson\source\repos\DaikonEngine\Daikon\obj\Debug\netcoreapp3.1\Daikon.AssemblyInfoInputs.cache
+C:\Users\bdonaldson\source\repos\DaikonEngine\Daikon\obj\Debug\netcoreapp3.1\Daikon.AssemblyInfo.cs
+C:\Users\bdonaldson\source\repos\DaikonEngine\Daikon\obj\Debug\netcoreapp3.1\Daikon.csproj.CoreCompileInputs.cache
+C:\Users\bdonaldson\source\repos\DaikonEngine\Daikon\obj\Debug\netcoreapp3.1\Daikon.dll
+C:\Users\bdonaldson\source\repos\DaikonEngine\Daikon\obj\Debug\netcoreapp3.1\Daikon.pdb

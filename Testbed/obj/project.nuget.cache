@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "VVHJdWe9NyOGqZuh56L8mqWeXuoiAUWZUrIgW8n0tu6gplLiW9ELYvj32b90gToLXZrbUAzUgZhLoeZvoMy9VQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\bdonaldson\\source\\repos\\DaikonEngine\\Testbed\\Testbed.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\bdonaldson\\.nuget\\packages\\csfml\\2.5.0\\csfml.2.5.0.nupkg.sha512",
+    "C:\\Users\\bdonaldson\\.nuget\\packages\\sfml.audio\\2.5.0\\sfml.audio.2.5.0.nupkg.sha512",
+    "C:\\Users\\bdonaldson\\.nuget\\packages\\sfml.graphics\\2.5.0\\sfml.graphics.2.5.0.nupkg.sha512",
+    "C:\\Users\\bdonaldson\\.nuget\\packages\\sfml.net\\2.5.0\\sfml.net.2.5.0.nupkg.sha512",
+    "C:\\Users\\bdonaldson\\.nuget\\packages\\sfml.system\\2.5.0\\sfml.system.2.5.0.nupkg.sha512",
+    "C:\\Users\\bdonaldson\\.nuget\\packages\\sfml.window\\2.5.0\\sfml.window.2.5.0.nupkg.sha512"
+  ],
+  "logs": []
+}
