@@ -1,6 +1,10 @@
-﻿using SFML.Graphics;
+﻿using Daikon.Components;
+using Daikon.Factories;
+using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
+using System;
+using System.Collections.Generic;
 
 namespace Daikon.WindowManager
 {
@@ -8,29 +12,33 @@ namespace Daikon.WindowManager
     {
         static RectangleShape dude;
         static RectangleShape floor;
-        static Shape[] rads;
-        static bool IsJumping;
+        static StupidShapeFactory shapeFactory;
+        static IStupidShape fallingShape;
+        static Vector2f FallingShapeLocation;
+        static List<Shape> FallingSegments;
+        static List<Shape> LandedSegments;
+
+
+        const float SEGMENT_SIZE = 50;
 
 
         public static void Run()
         {
-            VideoMode mode = new VideoMode(500, 500);
-            RenderWindow window = new RenderWindow(mode, "Box Boi");
+            shapeFactory = new StupidShapeFactory();
+
+            VideoMode mode = new VideoMode(500, 1000);
+            RenderWindow window = new RenderWindow(mode, "Shitty Tetris");
 
             window.Closed += (obj, e) => { window.Close(); };
             window.KeyPressed += KeyPressHandler;
+            window.Clear(Color.White);
 
-            dude = new RectangleShape();
-            dude.FillColor = Color.Magenta;
-            dude.Size = new Vector2f(50, 50);
+            ResetFallingShapeLocation(window);
 
-            
-            float textWidth = dude.GetLocalBounds().Width;
-            float textHeight = dude.GetLocalBounds().Height;
-            float xOffset = dude.GetLocalBounds().Left;
-            float yOffset = dude.GetLocalBounds().Top;
-            dude.Origin = new Vector2f(textWidth / 2f + xOffset, textHeight / 2f + yOffset);
-            dude.Position = new Vector2f(window.Size.X / 2f, window.Size.Y / 2f);
+            FallingSegments = new List<Shape>();
+            LandedSegments = new List<Shape>();
+
+            fallingShape = shapeFactory.GetNextStupidShape();
 
             floor = new RectangleShape();
             floor.FillColor = Color.Green;
@@ -45,22 +53,79 @@ namespace Daikon.WindowManager
 
             while (window.IsOpen)
             {
-                delta = clock.Restart().AsSeconds();
-
-
-                //if (!dude.GetGlobalBounds().Intersects(floor.GetGlobalBounds()))
-                //{
-                //    dude.Position += new Vector2f(0, 1f);
-                //}
-
-
                 //Game Loop
                 window.DispatchEvents();
-                window.Clear();
-                window.Draw(dude);
-                window.Draw(floor);
-                window.Display();
+                window.Clear(Color.White);
+                //window.Draw(dude);
+
+                FallingSegments.Clear();
+
+                if (clock.ElapsedTime.AsMilliseconds () > 500)
+                {
+                    FallingShapeLocation = new Vector2f(FallingShapeLocation.X, FallingShapeLocation.Y + SEGMENT_SIZE);
+                    clock.Restart();
+                }
+
+                RectangleShape[] fallingSegments = fallingShape.GetShape(FallingShapeLocation);
+
+                if (SegmentsHaveLanded(fallingSegments))
+                {
+                    LandedSegments.AddRange(fallingSegments);
+                    fallingShape = shapeFactory.GetNextStupidShape();
+                    ResetFallingShapeLocation(window);
+                }
+                else
+                {
+                    FallingSegments.AddRange(fallingSegments);
+                }
+
+                DrawSegments(window);
             }
+        }
+
+        private static void ResetFallingShapeLocation(RenderWindow window)
+        {
+            FallingShapeLocation = new Vector2f(window.Size.X / 2, 0);
+        }
+
+        private static void DrawSegments(RenderWindow window)
+        {
+            FallingSegments.ForEach(s => window.Draw(s));
+            LandedSegments.ForEach(s => window.Draw(s));
+
+            window.Draw(floor);
+
+            window.Display();
+        }
+
+        private static bool SegmentsHaveLanded(Shape[] fallingSegments)
+        {
+            bool isIntersected = false;
+
+            isIntersected = CheckVerticalIntersetion(fallingSegments, new List<RectangleShape>() { floor });
+
+            isIntersected |= CheckVerticalIntersetion(fallingSegments, LandedSegments);
+
+            return isIntersected;
+        }
+
+        private static bool CheckVerticalIntersetion(IEnumerable<Shape> groupA, IEnumerable<Shape> groupB)
+        {
+            foreach (var segmentA in groupA)
+            {
+                foreach(var segmentB in groupB)
+                {
+                    if (segmentA.Position.Y + SEGMENT_SIZE >= segmentB.Position.Y)
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static void ApplyGravity(List<Shape> segments)
+        {
+            throw new NotImplementedException();
         }
 
         static void KeyPressHandler(object sender, KeyEventArgs e)
@@ -78,7 +143,7 @@ namespace Daikon.WindowManager
                 case Keyboard.Key.Down: dude.Position += new Vector2f(0, dude.Size.Y); break;
                 case Keyboard.Key.Left: dude.Position += new Vector2f(-dude.Size.X, 0); break;
                 case Keyboard.Key.Right: dude.Position += new Vector2f(dude.Size.X, 0); break;
-                case Keyboard.Key.Space: IsJumping = true; break;
+                case Keyboard.Key.Space: fallingShape.Rotate(); break;
             }
         }
     }
