@@ -9,13 +9,19 @@ using System.Collections.Generic;
 namespace Daikon.WindowManager
 {
     public static class WindowManager
-    {
-        static RectangleShape dude;
+    {        
         static RectangleShape floor;
+        static bool InMotion;
+
         static StupidShapeFactory shapeFactory;
         static IStupidShape fallingShape;
         static Vector2f FallingShapeLocation;
+        static Vector2f FallingShapeOrigin;
+        
+
         static List<Shape> FallingSegments;
+        static List<Shape> GhostSegments;
+
         static List<Shape> LandedSegments;
 
 
@@ -37,6 +43,7 @@ namespace Daikon.WindowManager
 
             FallingSegments = new List<Shape>();
             LandedSegments = new List<Shape>();
+            GhostSegments = new List<Shape>();
 
             fallingShape = shapeFactory.GetNextStupidShape();
 
@@ -59,28 +66,49 @@ namespace Daikon.WindowManager
                 //window.Draw(dude);
 
                 FallingSegments.Clear();
+                GhostSegments.Clear();
 
                 if (clock.ElapsedTime.AsMilliseconds () > 500)
                 {
-                    FallingShapeLocation = new Vector2f(FallingShapeLocation.X, FallingShapeLocation.Y + SEGMENT_SIZE);
+
+                    GhostSegments.AddRange(fallingShape.GetShape(new Vector2f(FallingShapeOrigin.X, FallingShapeOrigin.Y + SEGMENT_SIZE)));
+
+                    if (SegmentsHaveLanded(GhostSegments.ToArray()))
+                    {
+                        LandedSegments.AddRange(fallingShape.GetShape(FallingShapeOrigin));
+
+                        fallingShape = shapeFactory.GetNextStupidShape();
+                        ResetFallingShapeLocation(window);
+
+                    }
+
+
                     clock.Restart();
                 }
 
-                RectangleShape[] fallingSegments = fallingShape.GetShape(FallingShapeLocation);
 
-                if (SegmentsHaveLanded(fallingSegments))
+                if (SegmentsHaveLanded(GhostSegments.ToArray()))
                 {
-                    LandedSegments.AddRange(fallingSegments);
+                    LandedSegments.AddRange(fallingShape.GetShape(FallingShapeOrigin));
+
                     fallingShape = shapeFactory.GetNextStupidShape();
                     ResetFallingShapeLocation(window);
+                    
                 }
                 else
                 {
-                    FallingSegments.AddRange(fallingSegments);
+                    FallingSegments.AddRange(fallingShape.GetShape(FallingShapeOrigin));
                 }
+
+
 
                 DrawSegments(window);
             }
+        }
+
+        private static bool MovementDistanceReached()
+        {
+            return FallingShapeLocation.Y >= FallingShapeOrigin.Y + SEGMENT_SIZE;
         }
 
         private static void ResetFallingShapeLocation(RenderWindow window)
@@ -115,7 +143,7 @@ namespace Daikon.WindowManager
             {
                 foreach(var segmentB in groupB)
                 {
-                    if (segmentA.Position.Y + SEGMENT_SIZE >= segmentB.Position.Y)
+                    if (segmentA.GetGlobalBounds().Intersects(segmentB.GetGlobalBounds()))
                         return true;
                 }
             }
@@ -139,10 +167,9 @@ namespace Daikon.WindowManager
             switch (e.Code)
             {
                 case Keyboard.Key.Escape: window.Close(); break;
-                case Keyboard.Key.Up: dude.Position += new Vector2f(0, -dude.Size.Y); break;
-                case Keyboard.Key.Down: dude.Position += new Vector2f(0, dude.Size.Y); break;
-                case Keyboard.Key.Left: dude.Position += new Vector2f(-dude.Size.X, 0); break;
-                case Keyboard.Key.Right: dude.Position += new Vector2f(dude.Size.X, 0); break;
+                //case Keyboard.Key.Down: FallingShapeLocation = new Vector2f(FallingShapeLocation.X, FallingShapeLocation.Y + ); break;
+                case Keyboard.Key.Left: FallingShapeLocation = new Vector2f(FallingShapeLocation.X - SEGMENT_SIZE, FallingShapeLocation.Y); break;
+                case Keyboard.Key.Right: FallingShapeLocation = new Vector2f(FallingShapeLocation.X + SEGMENT_SIZE, FallingShapeLocation.Y); break;
                 case Keyboard.Key.Space: fallingShape.Rotate(); break;
             }
         }

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Daikon.Components
 {
-    public class StumpyTee : IStupidShape
+    public class FuckYouLine : IStupidShape
     {
         private Orientation orientation { get; set; }
 
@@ -15,42 +15,40 @@ namespace Daikon.Components
 
         private static Dictionary<Orientation, int[,]> ShapeMap = new Dictionary<Orientation, int[,]>(){
             {
-                Orientation.Standard, new int[3,3]
+                Orientation.Standard, new int[1,4]
                 {
-                    { 0,  1,  1 },
-                    { 0,  1,  0 },
-                    { 1,  1,  1 }
+                    { 1,  1,  1, 1}
                 }
             },
             {
-                Orientation.Inverted, new int[3,3]
+                Orientation.Inverted, new int[1,4]
                 {
-                    { 1,  1,  1 },
-                    { 0,  1,  1 },
-                    { 0,  1,  0 }
+                    { 1,  1,  1, 1}
                 }
             },
             {
-                Orientation.RotateLeft, new int[3,3]
+                Orientation.RotateLeft, new int[4,2]
                 {
-                    { 1,  0,  0 },
-                    { 1,  1,  0 },
-                    { 1,  0,  1 }
+                    { 1,  1},
+                    { 1,  1},
+                    { 1,  1},
+                    { 1,  1}
                 }
             },
             {
-                Orientation.RotateRight, new int[3,3]
+                Orientation.RotateRight, new int[4,2]
                 {
-                    { 1,  0,  1 },
-                    { 0,  1,  1 },
-                    { 0,  0,  1 }
+                    { 1,  1},
+                    { 1,  1},
+                    { 1,  1},
+                    { 1,  1}
                 }
             }
         };
 
         private int[,] RotatedShapeMap;
 
-        public StumpyTee(float segmentSize)
+        public FuckYouLine(float segmentSize)
         {
             _segmentSize = segmentSize;
             orientation = Orientation.Standard;
